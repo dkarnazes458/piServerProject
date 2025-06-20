@@ -1,9 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
 .app {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
 }
 
 .auth-container {
@@ -40,6 +45,8 @@
   font-size: 1rem;
   transition: border-color 0.3s;
   box-sizing: border-box;
+  background-color: white;
+  color: #333;
 }
 
 .form-group input:focus {
