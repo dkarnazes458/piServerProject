@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
-import Dashboard from './components/Dashboard';
+import ModularNav from './components/Navigation/ModularNav';
+import ModuleLoader from './components/ModuleLoader';
 import apiService from './services/api';
 import './App.css';
 
 function App() {
   const [user, setUser] = useState(null);
   const [currentView, setCurrentView] = useState('login');
+  const [currentModule, setCurrentModule] = useState('dashboard');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,8 +35,18 @@ function App() {
   };
 
   const handleLogout = () => {
+    apiService.clearToken();
     setUser(null);
     setCurrentView('login');
+    setCurrentModule('dashboard');
+  };
+
+  const handleModuleSelect = (moduleName, moduleData) => {
+    if (moduleName === 'logout') {
+      handleLogout();
+      return;
+    }
+    setCurrentModule(moduleName);
   };
 
   if (loading) {
@@ -42,7 +54,21 @@ function App() {
   }
 
   if (user) {
-    return <Dashboard user={user} onLogout={handleLogout} />;
+    return (
+      <div className="app-container">
+        <ModularNav 
+          user={user} 
+          onModuleSelect={handleModuleSelect}
+          currentModule={currentModule}
+        />
+        <main className="app-main">
+          <ModuleLoader 
+            moduleName={currentModule}
+            user={user}
+          />
+        </main>
+      </div>
+    );
   }
 
   return (

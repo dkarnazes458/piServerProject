@@ -1,0 +1,160 @@
+/* Modular Navigation Styles */
+.modular-nav {
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-header {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.admin-badge {
+  background: #ff6b6b;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.nav-modules {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+.nav-module {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-module:hover {
+  background: rgba(255, 255, 255, 0.1);
+  padding-left: 1.25rem;
+}
+
+.nav-module.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-right: 3px solid #4ecdc4;
+  font-weight: 600;
+}
+
+.nav-module.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.module-icon {
+  font-size: 1.2rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.module-name {
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.loading-indicator {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.nav-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-logout {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.nav-logout:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-loading, .nav-error {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.nav-error {
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modular-nav {
+    width: 200px;
+  }
+  
+  .nav-header h2 {
+    font-size: 1.2rem;
+  }
+  
+  .module-name {
+    font-size: 0.8rem;
+  }
+}

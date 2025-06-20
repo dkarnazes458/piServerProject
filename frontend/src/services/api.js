@@ -100,6 +100,28 @@ class ApiService {
   isAuthenticated() {
     return !!this.token;
   }
+
+  // Module Management
+  async getUserModules() {
+    return await this.request('/user/modules');
+  }
+
+  async toggleUserModule(moduleId) {
+    return await this.request(`/user/modules/${moduleId}/toggle`, {
+      method: 'PUT'
+    });
+  }
+
+  async getUserPreferences() {
+    return await this.request('/user/preferences');
+  }
+
+  async updateUserPreferences(preferences) {
+    return await this.request('/user/preferences', {
+      method: 'PUT',
+      body: JSON.stringify(preferences)
+    });
+  }
 }
 
 export default new ApiService();

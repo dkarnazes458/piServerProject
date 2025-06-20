@@ -19,3 +19,5 @@ database/migrations/__pycache__/
 *.log
 .vscode/
 .idea/
+
+PostgreCommands.md

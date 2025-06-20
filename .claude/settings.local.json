@@ -5,7 +5,8 @@
       "Bash(python:*)",
       "Bash(source:*)",
       "Bash(rm:*)",
-      "Bash(flask db:*)"
+      "Bash(flask db:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }
