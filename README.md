@@ -185,17 +185,35 @@ sudo ufw disable
 
 4. **Database Setup**
    ```bash
-   # Create PostgreSQL database
-   createdb pi_server_db
-   # Run migrations (once implemented)
-   python backend/migrate.py
+   # Install PostgreSQL
+   sudo apt update
+   sudo apt install postgresql postgresql-contrib
+   
+   # Start PostgreSQL service
+   sudo systemctl start postgresql
+   sudo systemctl enable postgresql
+   
+   # Create database and user
+   sudo -u postgres psql
+   CREATE DATABASE pi_server_db;
+   CREATE USER pi_user WITH PASSWORD 'your_password';
+   GRANT ALL PRIVILEGES ON DATABASE pi_server_db TO pi_user;
+   \q
+   
+   # Test connection
+   psql -h localhost -U pi_user -d pi_server_db
    ```
 
 5. **Environment Variables**
    ```bash
-   # Backend .env file
-   DATABASE_URL=postgresql://username:password@localhost:5432/pi_server_db
-   SECRET_KEY=your-secret-key
+   # Create backend/.env file
+   cd backend
+   cp .env.example .env
+   
+   # Edit .env with your values:
+   DATABASE_URL=postgresql://pi_user:your_password@localhost:5432/pi_server_db
+   SECRET_KEY=your-secret-key-here
+   JWT_SECRET_KEY=your-jwt-secret-key-here
    FLASK_ENV=development
    ```
 
