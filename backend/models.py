@@ -776,3 +776,478 @@ class Event(db.Model):
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
+
+
+class Trip(db.Model):
+    __tablename__ = 'trips'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Basic trip information
+    name = db.Column(db.String(200), nullable=False)  # "Weekend Cruise", "Catalina Island Trip"
+    description = db.Column(db.Text)
+    trip_type = db.Column(db.String(50), default='Leisure')  # Leisure, Racing, Training, Delivery, Charter
+    
+    # Boat and crew
+    boat_id = db.Column(db.Integer, db.ForeignKey('boats.id'), nullable=False)
+    captain_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    crew_size = db.Column(db.Integer, default=1)
+    
+    # Timing
+    start_date = db.Column(db.DateTime, nullable=False)
+    end_date = db.Column(db.DateTime)
+    planned_duration_hours = db.Column(db.Float)
+    actual_duration_hours = db.Column(db.Float)
+    
+    # Locations
+    start_location = db.Column(db.String(200))  # Port/Marina name
+    end_location = db.Column(db.String(200))
+    start_latitude = db.Column(db.Numeric(10, 8))  # GPS coordinates
+    start_longitude = db.Column(db.Numeric(11, 8))
+    end_latitude = db.Column(db.Numeric(10, 8))
+    end_longitude = db.Column(db.Numeric(11, 8))
+    
+    # Trip metrics
+    distance_miles = db.Column(db.Float)  # Nautical miles
+    distance_calculated = db.Column(db.Float)  # Auto-calculated from GPS track
+    max_speed_knots = db.Column(db.Float)
+    avg_speed_knots = db.Column(db.Float)
+    max_wind_speed_knots = db.Column(db.Float)
+    avg_wind_speed_knots = db.Column(db.Float)
+    wind_direction = db.Column(db.String(50))
+    
+    # Conditions and notes
+    weather_conditions = db.Column(db.Text)  # JSON or text description
+    sea_conditions = db.Column(db.Text)
+    visibility = db.Column(db.String(50))  # Excellent, Good, Fair, Poor
+    tide_conditions = db.Column(db.Text)
+    fuel_used_gallons = db.Column(db.Float)
+    fuel_cost = db.Column(db.Numeric(8, 2))
+    
+    # GPS and route data
+    gps_file_path = db.Column(db.String(500))  # Path to uploaded GPS file
+    gps_file_name = db.Column(db.String(255))  # Original filename
+    gps_file_size = db.Column(db.Integer)  # File size in bytes
+    gps_file_type = db.Column(db.String(10))  # gpx, kml, nmea, csv
+    route_processed = db.Column(db.Boolean, default=False)  # Whether GPS data has been processed
+    total_route_points = db.Column(db.Integer, default=0)
+    
+    # Trip status and logistics
+    status = db.Column(db.String(50), default='Planned')  # Planned, In Progress, Completed, Cancelled
+    purpose = db.Column(db.String(100))  # Business, Pleasure, Training, Racing, etc.
+    difficulty_level = db.Column(db.String(20), default='Moderate')  # Easy, Moderate, Challenging, Expert
+    
+    # Safety and emergency
+    emergency_contact = db.Column(db.String(200))
+    float_plan_filed = db.Column(db.Boolean, default=False)
+    float_plan_with = db.Column(db.String(200))  # Who has the float plan
+    safety_equipment_check = db.Column(db.Boolean, default=False)
+    
+    # Costs and expenses
+    total_cost = db.Column(db.Numeric(10, 2))
+    cost_breakdown = db.Column(db.Text)  # JSON of expense categories
+    
+    # Experience and learning
+    lessons_learned = db.Column(db.Text)
+    highlights = db.Column(db.Text)
+    challenges_faced = db.Column(db.Text)
+    overall_rating = db.Column(db.Integer)  # 1-5 star rating
+    would_repeat = db.Column(db.Boolean)
+    
+    # Documentation
+    photos = db.Column(db.Text)  # JSON array of photo paths
+    documents = db.Column(db.Text)  # JSON array of document paths
+    logbook_entries = db.Column(db.Text)  # JSON array of detailed log entries
+    
+    # Metadata
+    is_public = db.Column(db.Boolean, default=False)  # Share with community
+    is_favorite = db.Column(db.Boolean, default=False)
+    notes = db.Column(db.Text)
+    tags = db.Column(db.Text)  # JSON array of tags
+    
+    # Relationships
+    boat = db.relationship('Boat', backref='trips')
+    captain = db.relationship('User', foreign_keys=[captain_id], backref='captained_trips')
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def get_weather_conditions(self):
+        """Get weather conditions as dict"""
+        if self.weather_conditions:
+            try:
+                return json.loads(self.weather_conditions)
+            except json.JSONDecodeError:
+                return {'description': self.weather_conditions}
+        return {}
+    
+    def set_weather_conditions(self, conditions_dict):
+        """Set weather conditions from dict"""
+        self.weather_conditions = json.dumps(conditions_dict) if conditions_dict else None
+    
+    def get_cost_breakdown(self):
+        """Get cost breakdown as dict"""
+        if self.cost_breakdown:
+            try:
+                return json.loads(self.cost_breakdown)
+            except json.JSONDecodeError:
+                return {}
+        return {}
+    
+    def set_cost_breakdown(self, costs_dict):
+        """Set cost breakdown from dict"""
+        self.cost_breakdown = json.dumps(costs_dict) if costs_dict else None
+    
+    def get_photos(self):
+        """Get photos as list"""
+        if self.photos:
+            try:
+                return json.loads(self.photos)
+            except json.JSONDecodeError:
+                return []
+        return []
+    
+    def set_photos(self, photo_list):
+        """Set photos from list"""
+        self.photos = json.dumps(photo_list) if photo_list else None
+    
+    def get_documents(self):
+        """Get documents as list"""
+        if self.documents:
+            try:
+                return json.loads(self.documents)
+            except json.JSONDecodeError:
+                return []
+        return []
+    
+    def set_documents(self, doc_list):
+        """Set documents from list"""
+        self.documents = json.dumps(doc_list) if doc_list else None
+    
+    def get_logbook_entries(self):
+        """Get logbook entries as list"""
+        if self.logbook_entries:
+            try:
+                return json.loads(self.logbook_entries)
+            except json.JSONDecodeError:
+                return []
+        return []
+    
+    def set_logbook_entries(self, entries_list):
+        """Set logbook entries from list"""
+        self.logbook_entries = json.dumps(entries_list) if entries_list else None
+    
+    def get_tags(self):
+        """Get tags as list"""
+        if self.tags:
+            try:
+                return json.loads(self.tags)
+            except json.JSONDecodeError:
+                return []
+        return []
+    
+    def set_tags(self, tag_list):
+        """Set tags from list"""
+        self.tags = json.dumps(tag_list) if tag_list else None
+    
+    def calculate_actual_duration(self):
+        """Calculate actual trip duration in hours"""
+        if self.start_date and self.end_date:
+            delta = self.end_date - self.start_date
+            return delta.total_seconds() / 3600
+        return None
+    
+    def calculate_average_speed(self):
+        """Calculate average speed based on distance and duration"""
+        duration = self.actual_duration_hours or self.calculate_actual_duration()
+        if duration and duration > 0 and self.distance_miles:
+            return self.distance_miles / duration
+        return None
+    
+    def is_completed(self):
+        """Check if trip is completed"""
+        return self.status == 'Completed'
+    
+    def is_in_progress(self):
+        """Check if trip is currently in progress"""
+        return self.status == 'In Progress'
+    
+    def days_since_trip(self):
+        """Calculate days since trip ended"""
+        if self.end_date:
+            delta = datetime.utcnow() - self.end_date
+            return delta.days
+        return None
+    
+    def to_dict(self):
+        """Convert trip to dictionary for JSON response"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'trip_type': self.trip_type,
+            'boat_id': self.boat_id,
+            'boat_name': self.boat.name if self.boat else None,
+            'captain_id': self.captain_id,
+            'captain_name': self.captain.get_full_name() if self.captain else None,
+            'crew_size': self.crew_size,
+            'start_date': self.start_date.isoformat(),
+            'end_date': self.end_date.isoformat() if self.end_date else None,
+            'planned_duration_hours': self.planned_duration_hours,
+            'actual_duration_hours': self.actual_duration_hours or self.calculate_actual_duration(),
+            'start_location': self.start_location,
+            'end_location': self.end_location,
+            'start_latitude': float(self.start_latitude) if self.start_latitude else None,
+            'start_longitude': float(self.start_longitude) if self.start_longitude else None,
+            'end_latitude': float(self.end_latitude) if self.end_latitude else None,
+            'end_longitude': float(self.end_longitude) if self.end_longitude else None,
+            'distance_miles': self.distance_miles,
+            'distance_calculated': self.distance_calculated,
+            'max_speed_knots': self.max_speed_knots,
+            'avg_speed_knots': self.avg_speed_knots or self.calculate_average_speed(),
+            'max_wind_speed_knots': self.max_wind_speed_knots,
+            'avg_wind_speed_knots': self.avg_wind_speed_knots,
+            'wind_direction': self.wind_direction,
+            'weather_conditions': self.get_weather_conditions(),
+            'sea_conditions': self.sea_conditions,
+            'visibility': self.visibility,
+            'tide_conditions': self.tide_conditions,
+            'fuel_used_gallons': self.fuel_used_gallons,
+            'fuel_cost': float(self.fuel_cost) if self.fuel_cost else None,
+            'gps_file_name': self.gps_file_name,
+            'gps_file_size': self.gps_file_size,
+            'gps_file_type': self.gps_file_type,
+            'route_processed': self.route_processed,
+            'total_route_points': self.total_route_points,
+            'status': self.status,
+            'purpose': self.purpose,
+            'difficulty_level': self.difficulty_level,
+            'emergency_contact': self.emergency_contact,
+            'float_plan_filed': self.float_plan_filed,
+            'float_plan_with': self.float_plan_with,
+            'safety_equipment_check': self.safety_equipment_check,
+            'total_cost': float(self.total_cost) if self.total_cost else None,
+            'cost_breakdown': self.get_cost_breakdown(),
+            'lessons_learned': self.lessons_learned,
+            'highlights': self.highlights,
+            'challenges_faced': self.challenges_faced,
+            'overall_rating': self.overall_rating,
+            'would_repeat': self.would_repeat,
+            'photos': self.get_photos(),
+            'documents': self.get_documents(),
+            'logbook_entries': self.get_logbook_entries(),
+            'is_public': self.is_public,
+            'is_favorite': self.is_favorite,
+            'notes': self.notes,
+            'tags': self.get_tags(),
+            'is_completed': self.is_completed(),
+            'is_in_progress': self.is_in_progress(),
+            'days_since_trip': self.days_since_trip(),
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+
+class GPSRoutePoint(db.Model):
+    __tablename__ = 'gps_route_points'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    
+    # GPS coordinates
+    latitude = db.Column(db.Numeric(10, 8), nullable=False)
+    longitude = db.Column(db.Numeric(11, 8), nullable=False)
+    altitude = db.Column(db.Float)  # In meters above sea level
+    
+    # Timing
+    timestamp = db.Column(db.DateTime, nullable=False)
+    elapsed_time_seconds = db.Column(db.Integer)  # Seconds since trip start
+    
+    # Movement data
+    speed_knots = db.Column(db.Float)
+    speed_over_ground = db.Column(db.Float)  # GPS calculated speed
+    course_over_ground = db.Column(db.Float)  # GPS calculated heading (degrees)
+    heading = db.Column(db.Float)  # Compass heading (degrees from north)
+    
+    # GPS quality and accuracy
+    accuracy = db.Column(db.Float)  # GPS accuracy in meters
+    satellites_used = db.Column(db.Integer)  # Number of GPS satellites
+    hdop = db.Column(db.Float)  # Horizontal Dilution of Precision
+    signal_quality = db.Column(db.String(20))  # Excellent, Good, Fair, Poor
+    
+    # Point classification
+    point_type = db.Column(db.String(20), default='track')  # track, waypoint, anchor, mooring, mark
+    point_name = db.Column(db.String(100))  # Name for waypoints/marks
+    
+    # Environmental data (if available)
+    water_depth = db.Column(db.Float)  # Depth in feet or meters
+    water_temperature = db.Column(db.Float)
+    air_temperature = db.Column(db.Float)
+    wind_speed = db.Column(db.Float)
+    wind_direction = db.Column(db.Float)
+    barometric_pressure = db.Column(db.Float)
+    
+    # Distance calculations
+    distance_from_previous = db.Column(db.Float)  # Nautical miles from previous point
+    cumulative_distance = db.Column(db.Float)  # Total distance from trip start
+    
+    # Engine and sail data
+    engine_rpm = db.Column(db.Integer)
+    engine_temperature = db.Column(db.Float)
+    fuel_flow_rate = db.Column(db.Float)
+    sail_configuration = db.Column(db.String(100))  # "Main + Jib", "Spinnaker", etc.
+    
+    # Additional data
+    notes = db.Column(db.Text)  # Any notes about this specific point
+    is_significant = db.Column(db.Boolean, default=False)  # Mark important points
+    
+    # Relationships
+    trip = db.relationship('Trip', backref='route_points')
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def distance_to_point(self, other_point):
+        """Calculate distance to another GPS point using Haversine formula"""
+        # Convert latitude and longitude to radians
+        lat1 = math.radians(float(self.latitude))
+        lon1 = math.radians(float(self.longitude))
+        lat2 = math.radians(float(other_point.latitude))
+        lon2 = math.radians(float(other_point.longitude))
+        
+        # Haversine formula
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+        a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+        c = 2 * math.asin(math.sqrt(a))
+        
+        # Radius of earth in nautical miles
+        r = 3440.065
+        
+        return c * r
+    
+    def bearing_to_point(self, other_point):
+        """Calculate bearing to another GPS point"""
+        lat1 = math.radians(float(self.latitude))
+        lon1 = math.radians(float(self.longitude))
+        lat2 = math.radians(float(other_point.latitude))
+        lon2 = math.radians(float(other_point.longitude))
+        
+        dlon = lon2 - lon1
+        
+        y = math.sin(dlon) * math.cos(lat2)
+        x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(dlon)
+        
+        bearing = math.degrees(math.atan2(y, x))
+        
+        # Normalize to 0-360 degrees
+        return (bearing + 360) % 360
+    
+    def time_since_previous(self, previous_point):
+        """Calculate time elapsed since previous point"""
+        if previous_point and previous_point.timestamp:
+            delta = self.timestamp - previous_point.timestamp
+            return delta.total_seconds()
+        return None
+    
+    def to_dict(self):
+        """Convert GPS point to dictionary for JSON response"""
+        return {
+            'id': self.id,
+            'trip_id': self.trip_id,
+            'latitude': float(self.latitude),
+            'longitude': float(self.longitude),
+            'altitude': self.altitude,
+            'timestamp': self.timestamp.isoformat(),
+            'elapsed_time_seconds': self.elapsed_time_seconds,
+            'speed_knots': self.speed_knots,
+            'speed_over_ground': self.speed_over_ground,
+            'course_over_ground': self.course_over_ground,
+            'heading': self.heading,
+            'accuracy': self.accuracy,
+            'satellites_used': self.satellites_used,
+            'hdop': self.hdop,
+            'signal_quality': self.signal_quality,
+            'point_type': self.point_type,
+            'point_name': self.point_name,
+            'water_depth': self.water_depth,
+            'water_temperature': self.water_temperature,
+            'air_temperature': self.air_temperature,
+            'wind_speed': self.wind_speed,
+            'wind_direction': self.wind_direction,
+            'barometric_pressure': self.barometric_pressure,
+            'distance_from_previous': self.distance_from_previous,
+            'cumulative_distance': self.cumulative_distance,
+            'engine_rpm': self.engine_rpm,
+            'engine_temperature': self.engine_temperature,
+            'fuel_flow_rate': self.fuel_flow_rate,
+            'sail_configuration': self.sail_configuration,
+            'notes': self.notes,
+            'is_significant': self.is_significant,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+# Relationship tables for many-to-many relationships
+
+class TripParticipant(db.Model):
+    __tablename__ = 'trip_participants'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    # Role and participation details
+    role = db.Column(db.String(50), default='Crew')  # Captain, Crew, Guest, Observer, Instructor
+    is_confirmed = db.Column(db.Boolean, default=True)
+    experience_level = db.Column(db.String(20))  # Beginner, Intermediate, Advanced
+    
+    # Participation tracking
+    joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+    left_at = db.Column(db.DateTime)  # If they left early
+    hours_participated = db.Column(db.Float)
+    
+    # Emergency and contact info
+    emergency_contact = db.Column(db.String(200))
+    medical_notes = db.Column(db.Text)
+    dietary_restrictions = db.Column(db.Text)
+    
+    # Cost sharing
+    cost_share = db.Column(db.Numeric(8, 2))  # Amount this person paid
+    cost_share_percentage = db.Column(db.Float)  # Percentage of total cost
+    
+    # Performance and feedback
+    performance_rating = db.Column(db.Integer)  # 1-5 rating of their contribution
+    notes = db.Column(db.Text)  # Notes about this person's participation
+    
+    # Relationships
+    trip = db.relationship('Trip', backref='participants')
+    user = db.relationship('User', backref='trip_participations')
+    
+    # Unique constraint to prevent duplicate participant entries
+    __table_args__ = (db.UniqueConstraint('trip_id', 'user_id', name='_trip_user_uc'),)
+    
+    def to_dict(self):
+        """Convert trip participant to dictionary for JSON response"""
+        return {
+            'id': self.id,
+            'trip_id': self.trip_id,
+            'trip_name': self.trip.name if self.trip else None,
+            'user_id': self.user_id,
+            'user_name': self.user.get_full_name() if self.user else None,
+            'username': self.user.username if self.user else None,
+            'role': self.role,
+            'is_confirmed': self.is_confirmed,
+            'experience_level': self.experience_level,
+            'joined_at': self.joined_at.isoformat(),
+            'left_at': self.left_at.isoformat() if self.left_at else None,
+            'hours_participated': self.hours_participated,
+            'emergency_contact': self.emergency_contact,
+            'medical_notes': self.medical_notes,
+            'dietary_restrictions': self.dietary_restrictions,
+            'cost_share': float(self.cost_share) if self.cost_share else None,
+            'cost_share_percentage': self.cost_share_percentage,
+            'performance_rating': self.performance_rating,
+            'notes': self.notes
+        }
