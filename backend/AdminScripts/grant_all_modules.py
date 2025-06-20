@@ -12,6 +12,9 @@ Usage:
 
 import sys
 import os
+# Add parent directory to path to import from backend root
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from flask import Flask
 from config import Config
 from models import db, User, SystemModule, UserModulePermission
