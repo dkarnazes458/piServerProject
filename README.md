@@ -67,6 +67,100 @@ node --version  # Should show v18+
 
 **If still getting v16**: The system package manager may be overriding. Use NVM method above.
 
+### Raspberry Pi Firewall Configuration
+
+**Check if ports are blocked**:
+```bash
+# Check firewall status
+sudo ufw status
+
+# Check if ports are listening
+sudo netstat -tlnp | grep :5000
+sudo netstat -tlnp | grep :5173
+```
+
+**Open required ports**:
+```bash
+# Allow development ports
+sudo ufw allow 5000/tcp
+sudo ufw allow 5173/tcp
+
+# Optional: Allow SSH if needed
+sudo ufw allow ssh
+
+# Enable firewall (if not already enabled)
+sudo ufw enable
+
+# Verify rules
+sudo ufw status verbose
+```
+
+**Alternative: Disable firewall for development**:
+```bash
+sudo ufw disable
+```
+
+### Troubleshooting Network Access
+
+**Step 1: Verify services are listening**:
+```bash
+# Check if services bind to all interfaces (should show 0.0.0.0)
+sudo netstat -tlnp | grep :5000
+sudo netstat -tlnp | grep :5173
+
+# Alternative check
+sudo ss -tlnp | grep :5173
+```
+
+**Step 2: Test local connectivity**:
+```bash
+# Test from Pi itself
+curl http://localhost:5173
+curl http://192.168.1.165:5173
+
+# Check Pi's IP address
+ip addr show
+hostname -I
+```
+
+**Step 3: Firewall troubleshooting**:
+```bash
+# Check firewall status
+sudo ufw status
+
+# Temporarily disable for testing
+sudo ufw disable
+
+# Try accessing from another device now
+```
+
+**Step 4: Router/Network issues**:
+- Some routers block inter-device communication
+- Try accessing from Pi's browser first: `http://localhost:5173`
+- Check if other devices can ping the Pi: `ping 192.168.1.165`
+
+### Chrome Access Issues
+
+**Chrome blocks local network access by default. Solutions**:
+
+1. **Use a different browser**:
+   - Firefox, Safari, or Edge work better for local development
+
+2. **Chrome flags** (temporary fix):
+   - Go to `chrome://flags/#block-insecure-private-network-requests`
+   - Set to "Disabled"
+   - Restart Chrome
+
+3. **Add Chrome launch flag**:
+   ```bash
+   # Launch Chrome with flag
+   google-chrome --disable-web-security --user-data-dir="/tmp/chrome_dev"
+   ```
+
+4. **Use HTTPS** (advanced):
+   - Set up SSL certificates for local development
+   - Access via `https://192.168.1.165:5173`
+
 ### Local Development
 
 1. **Clone the repository**
