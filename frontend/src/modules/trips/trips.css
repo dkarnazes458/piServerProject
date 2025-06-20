@@ -1,7 +1,14 @@
 /* Trips Module Styles */
 
+/* Global overrides for consistent styling */
+.trips-container,
+.trips-container * {
+  color: #333 !important;
+}
+
 .trips-container {
   padding: 20px;
+  background-color: #f8f9fa;
 }
 
 .trips-header {
@@ -29,12 +36,35 @@
   min-width: 300px;
 }
 
+.search-box input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white !important;
+  color: #333 !important;
+}
+
+/* Override autofill for search box */
+.search-box input:-webkit-autofill,
+.search-box input:-webkit-autofill:hover,
+.search-box input:-webkit-autofill:focus,
+.search-box input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+  background-color: white !important;
+  color: #333 !important;
+}
+
 .filter-box select {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  background-color: white;
+  background-color: white !important;
+  color: #333 !important;
 }
 
 .trips-table-container {
@@ -183,6 +213,51 @@
 .checkbox-group input[type="checkbox"] {
   margin-right: 8px;
   margin-bottom: 0;
+}
+
+/* Ensure all form inputs have consistent styling */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group input[type="datetime-local"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group select,
+.form-group textarea {
+  background-color: white !important;
+  color: #333 !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Override browser autofill styles */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+  background-color: white !important;
+  color: #333 !important;
+}
+
+/* Override any dark mode or theme styles */
+.trip-form input,
+.trip-form select,
+.trip-form textarea,
+.trip-detail input,
+.trip-detail select,
+.trip-detail textarea {
+  background-color: white !important;
+  color: #333 !important;
+  border: 1px solid #ced4da !important;
+}
+
+/* Ensure select dropdowns have white backgrounds */
+.form-group select option {
+  background-color: white !important;
+  color: #333 !important;
 }
 
 /* Trip Detail Specific Styles */

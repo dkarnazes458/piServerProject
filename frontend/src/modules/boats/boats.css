@@ -1,7 +1,14 @@
 /* Boats Module Styles */
 
+/* Global overrides for consistent styling */
+.boats-container,
+.boats-container * {
+  color: #333 !important;
+}
+
 .boats-container {
   padding: 20px;
+  background-color: #f8f9fa;
 }
 
 .boats-header {
@@ -56,6 +63,19 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
+  background-color: white !important;
+  color: #333 !important;
+}
+
+/* Override autofill for search box */
+.search-box input:-webkit-autofill,
+.search-box input:-webkit-autofill:hover,
+.search-box input:-webkit-autofill:focus,
+.search-box input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+  background-color: white !important;
+  color: #333 !important;
 }
 
 .boats-table-container {
@@ -212,7 +232,7 @@
 .form-group label {
   margin-bottom: 5px;
   font-weight: 500;
-  color: #495057;
+  color: #333;
   font-size: 14px;
 }
 
@@ -223,6 +243,8 @@
   border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 14px;
+  background-color: white;
+  color: #333;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -232,11 +254,59 @@
   outline: none;
   border-color: #80bdff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  background-color: white;
+  color: #333;
 }
 
 .form-group textarea {
   resize: vertical;
   min-height: 100px;
+  background-color: white;
+  color: #333;
+}
+
+/* Ensure all form inputs have consistent styling */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group select,
+.form-group textarea {
+  background-color: white !important;
+  color: #333 !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Override browser autofill styles */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+  background-color: white !important;
+  color: #333 !important;
+}
+
+/* Override any dark mode or theme styles */
+.boat-form input,
+.boat-form select,
+.boat-form textarea,
+.boat-detail input,
+.boat-detail select,
+.boat-detail textarea {
+  background-color: white !important;
+  color: #333 !important;
+  border: 1px solid #ced4da !important;
+}
+
+/* Ensure select dropdowns have white backgrounds */
+.form-group select option {
+  background-color: white !important;
+  color: #333 !important;
 }
 
 .form-actions {
@@ -305,6 +375,7 @@
   align-items: center;
   padding: 20px 30px;
   border-bottom: 1px solid #e9ecef;
+  background-color: white;
 }
 
 .detail-header h3 {
@@ -332,6 +403,7 @@
 
 .detail-content {
   padding: 30px;
+  background-color: white;
 }
 
 .detail-grid {
@@ -341,9 +413,10 @@
 }
 
 .detail-section {
-  background-color: #f8f9fa;
+  background-color: white;
   padding: 20px;
   border-radius: 6px;
+  border: 1px solid #e9ecef;
 }
 
 .detail-section.full-width {
@@ -353,7 +426,7 @@
 .detail-section h4 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: #495057;
+  color: #333;
   font-size: 16px;
   border-bottom: 2px solid #dee2e6;
   padding-bottom: 5px;
@@ -373,7 +446,7 @@
 
 .detail-item label {
   font-weight: 500;
-  color: #495057;
+  color: #333;
   margin-right: 15px;
   min-width: 120px;
 }
