@@ -25,10 +25,47 @@ piServerProject/
 
 ### Prerequisites
 
-- Node.js (v18+)
+- Node.js (v18+ **Required for Vite**)
 - Python (v3.9+)
 - PostgreSQL
 - Git
+
+### Raspberry Pi Setup
+
+**Node.js Version Issue**: Vite requires Node.js v18+ with modern crypto support. Raspberry Pi often has older versions.
+
+**Recommended: Use NVM (Node Version Manager)**:
+```bash
+# Install NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Reload shell or restart terminal
+source ~/.bashrc
+
+# Install and use Node.js v18
+nvm install 18
+nvm use 18
+nvm alias default 18
+
+# Verify version
+node --version  # Should show v18+
+```
+
+**Alternative: Manual NodeSource Install**:
+```bash
+# Remove old Node.js completely
+sudo apt remove --purge nodejs npm
+sudo apt autoremove
+
+# Install Node.js v18+ using NodeSource
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verify version
+node --version  # Should show v18+
+```
+
+**If still getting v16**: The system package manager may be overriding. Use NVM method above.
 
 ### Local Development
 
@@ -74,12 +111,20 @@ piServerProject/
    ```bash
    cd backend
    python app.py
+   # Available at: http://0.0.0.0:5000 (all network interfaces)
    ```
 
 2. **Start Frontend**
    ```bash
    cd frontend
    npm run dev
+   # Available at: http://0.0.0.0:5173 (all network interfaces)
+   ```
+
+3. **Access from other devices**
+   ```
+   Frontend: http://[PI_IP_ADDRESS]:5173
+   Backend:  http://[PI_IP_ADDRESS]:5000
    ```
 
 ### Deployment to Raspberry Pi
