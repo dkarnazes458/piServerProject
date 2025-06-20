@@ -1,0 +1,395 @@
+/* Trips Module Styles */
+
+.trips-container {
+  padding: 20px;
+}
+
+.trips-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.trips-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Trip List Specific Styles */
+.list-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 300px;
+}
+
+.filter-box select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.trips-table-container {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.trips-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.trips-table th,
+.trips-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.trips-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  position: sticky;
+  top: 0;
+}
+
+.trips-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.trips-table th.sortable:hover {
+  background-color: #e9ecef;
+}
+
+.trips-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.trip-type,
+.trip-time,
+.difficulty {
+  font-size: 12px;
+  color: #6c757d;
+  margin-top: 2px;
+}
+
+.route-info {
+  font-size: 13px;
+}
+
+.route-start,
+.route-end {
+  margin: 1px 0;
+}
+
+.route-start {
+  color: #28a745;
+}
+
+.route-end {
+  color: #dc3545;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-planned {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-in-progress {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-unknown {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+/* Trip Form Specific Styles */
+.trip-form {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trip-form h3 {
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-subsection {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.form-subsection h5 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 8px;
+  margin-bottom: 0;
+}
+
+/* Trip Detail Specific Styles */
+.trip-detail .detail-notes h5 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.trip-detail .detail-notes div {
+  margin-bottom: 15px;
+}
+
+.trip-detail .detail-notes div:last-child {
+  margin-bottom: 0;
+}
+
+/* Status and Progress Indicators */
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.progress-bar {
+  height: 4px;
+  background-color: #e9ecef;
+  border-radius: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #28a745;
+  transition: width 0.3s ease;
+}
+
+/* Trip Statistics */
+.trip-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6c757d;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+/* Responsive Design for Trips */
+@media (max-width: 768px) {
+  .trips-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .trips-actions {
+    justify-content: center;
+  }
+  
+  .list-controls {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    min-width: auto;
+  }
+  
+  .trips-table {
+    min-width: 600px;
+  }
+  
+  .trips-table th,
+  .trips-table td {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  .form-subsection {
+    padding: 10px;
+  }
+  
+  .trip-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .trips-container {
+    padding: 10px;
+  }
+  
+  .trip-form,
+  .trip-detail {
+    padding: 15px;
+  }
+  
+  .trip-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-card {
+    padding: 10px;
+  }
+  
+  .stat-value {
+    font-size: 20px;
+  }
+  
+  .list-controls {
+    gap: 10px;
+  }
+}
+
+/* Additional Trip-specific Elements */
+.weather-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.weather-item {
+  background-color: #e3f2fd;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #0277bd;
+}
+
+.coordinates {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  background-color: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #495057;
+}
+
+.duration-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.duration-planned,
+.duration-actual {
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.duration-planned {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.duration-actual {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.star-rating {
+  color: #ffc107;
+  font-size: 16px;
+}
+
+.trip-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.trip-tag {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+}

@@ -6,7 +6,7 @@ const getApiBaseUrl = () => {
   
   // Check if we're in development mode
   if (import.meta.env.DEV) {
-    return 'http://localhost:5000/api';
+    return 'http://localhost:5001/api';
   }
   
   // For production, try to detect the current host
@@ -14,11 +14,11 @@ const getApiBaseUrl = () => {
   
   // If accessing via localhost/127.0.0.1, assume development
   if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-    return 'http://localhost:5000/api';
+    return 'http://localhost:5001/api';
   }
   
-  // For production, use the same host as the frontend with port 5000
-  return `http://${currentHost}:5000/api`;
+  // For production, use the same host as the frontend with port 5001
+  return `http://${currentHost}:5001/api`;
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -120,6 +120,64 @@ class ApiService {
     return await this.request('/user/preferences', {
       method: 'PUT',
       body: JSON.stringify(preferences)
+    });
+  }
+
+  // Boats API
+  async getBoats() {
+    return await this.request('/boats');
+  }
+
+  async getBoat(id) {
+    return await this.request(`/boats/${id}`);
+  }
+
+  async createBoat(boatData) {
+    return await this.request('/boats', {
+      method: 'POST',
+      body: JSON.stringify(boatData)
+    });
+  }
+
+  async updateBoat(id, boatData) {
+    return await this.request(`/boats/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(boatData)
+    });
+  }
+
+  async deleteBoat(id) {
+    return await this.request(`/boats/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // Trips API
+  async getTrips() {
+    return await this.request('/trips');
+  }
+
+  async getTrip(id) {
+    return await this.request(`/trips/${id}`);
+  }
+
+  async createTrip(tripData) {
+    return await this.request('/trips', {
+      method: 'POST',
+      body: JSON.stringify(tripData)
+    });
+  }
+
+  async updateTrip(id, tripData) {
+    return await this.request(`/trips/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(tripData)
+    });
+  }
+
+  async deleteTrip(id) {
+    return await this.request(`/trips/${id}`, {
+      method: 'DELETE'
     });
   }
 }
