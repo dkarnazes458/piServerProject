@@ -105,7 +105,7 @@ const EquipmentDetail = ({ equipment, onEdit, onBack, onDelete }) => {
     <div className="equipment-detail">
       <div className="detail-header">
         <div className="detail-title">
-          <button onClick={onBack} className="btn btn-link back-button">
+          <button onClick={onBack} className="btn-link back-button">
             ← Back to Equipment List
           </button>
           <h1>{equipment.name}</h1>
@@ -114,10 +114,10 @@ const EquipmentDetail = ({ equipment, onEdit, onBack, onDelete }) => {
           )}
         </div>
         <div className="detail-actions">
-          <button onClick={() => onEdit(equipment)} className="btn btn-primary">
+          <button onClick={() => onEdit(equipment)} className="btn-primary">
             Edit Equipment
           </button>
-          <button onClick={handleDelete} className="btn btn-danger">
+          <button onClick={handleDelete} className="btn-danger">
             Delete
           </button>
         </div>

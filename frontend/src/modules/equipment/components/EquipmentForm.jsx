@@ -380,14 +380,14 @@ const EquipmentForm = ({ equipment, onSave, onCancel }) => {
           <button 
             type="button" 
             onClick={onCancel}
-            className="btn btn-secondary"
+            className="btn-secondary"
             disabled={loading}
           >
             Cancel
           </button>
           <button 
             type="submit"
-            className="btn btn-primary"
+            className="btn-primary"
             disabled={loading}
           >
             {loading ? 'Saving...' : (equipment ? 'Update Equipment' : 'Add Equipment')}

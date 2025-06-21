@@ -81,7 +81,7 @@ const EquipmentModule = ({ user }) => {
   };
 
   return (
-    <div className="module-container">
+    <div className="equipment-container">
       {renderCurrentView()}
     </div>
   );

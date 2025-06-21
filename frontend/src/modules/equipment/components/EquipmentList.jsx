@@ -111,7 +111,7 @@ const EquipmentList = ({ onSelect, onEdit, onAdd }) => {
       <div className="equipment-list error">
         <div className="error-message">
           <p>Error loading equipment: {error}</p>
-          <button onClick={loadEquipment} className="btn btn-primary">
+          <button onClick={loadEquipment} className="btn-primary">
             Try Again
           </button>
         </div>
@@ -126,7 +126,7 @@ const EquipmentList = ({ onSelect, onEdit, onAdd }) => {
           <h2>Equipment Inventory</h2>
           <span className="item-count">{filteredEquipment.length} items</span>
         </div>
-        <button onClick={onAdd} className="btn btn-primary">
+        <button onClick={onAdd} className="btn-primary">
           Add Equipment
         </button>
       </div>
@@ -202,14 +202,14 @@ const EquipmentList = ({ onSelect, onEdit, onAdd }) => {
                   <div className="equipment-actions">
                     <button 
                       onClick={() => onEdit(item)}
-                      className="btn btn-sm btn-secondary"
+                      className="btn-sm btn-secondary"
                       title="Edit"
                     >
                       ✏️
                     </button>
                     <button 
                       onClick={() => handleDelete(item.id, item.name)}
-                      className="btn btn-sm btn-danger"
+                      className="btn-sm btn-danger"
                       title="Delete"
                     >
                       🗑️
