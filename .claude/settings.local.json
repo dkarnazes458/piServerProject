@@ -8,7 +8,8 @@
       "Bash(flask db:*)",
       "Bash(mv:*)",
       "Bash(rg:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(npm run lint)"
     ],
     "deny": []
   }

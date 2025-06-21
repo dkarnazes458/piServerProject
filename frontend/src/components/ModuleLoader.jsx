@@ -10,15 +10,21 @@ const ModuleLoader = ({ moduleName, user, ...props }) => {
   const [ModuleComponent, setModuleComponent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { checkModuleAccess } = useModules(user);
+  const { checkModuleAccess, loading: modulesLoading } = useModules(user);
 
   useEffect(() => {
     loadModuleComponent();
-  }, [moduleName]);
+  }, [moduleName, modulesLoading, checkModuleAccess]);
 
   const loadModuleComponent = async () => {
     if (!moduleName) {
       setLoading(false);
+      return;
+    }
+
+    // Wait for modules to finish loading before checking access
+    if (modulesLoading) {
+      setLoading(true);
       return;
     }
 
