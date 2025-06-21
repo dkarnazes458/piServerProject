@@ -28,6 +28,22 @@ body {
   padding: 0;
   overflow-y: auto;
   background: #f8f9fa;
+  transition: margin-left 0.3s ease;
+}
+
+.app-main.nav-collapsed {
+  margin-left: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-main {
+    margin-left: 200px;
+  }
+  
+  .app-main.nav-collapsed {
+    margin-left: 50px;
+  }
 }
 
 /* Module Loading States */

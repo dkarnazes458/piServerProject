@@ -11,6 +11,7 @@ function App() {
   const [currentView, setCurrentView] = useState('login');
   const [currentModule, setCurrentModule] = useState('dashboard');
   const [loading, setLoading] = useState(true);
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   useEffect(() => {
     // Check if user is already logged in
@@ -49,6 +50,10 @@ function App() {
     setCurrentModule(moduleName);
   };
 
+  const handleNavCollapse = (collapsed) => {
+    setNavCollapsed(collapsed);
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -60,8 +65,9 @@ function App() {
           user={user} 
           onModuleSelect={handleModuleSelect}
           currentModule={currentModule}
+          onNavCollapse={handleNavCollapse}
         />
-        <main className="app-main">
+        <main className={`app-main ${navCollapsed ? 'nav-collapsed' : ''}`}>
           <ModuleLoader 
             moduleName={currentModule}
             user={user}

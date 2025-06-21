@@ -8,9 +8,18 @@ import { useModules } from '../../hooks/useModules';
 import { loadModule } from '../../modules/moduleRegistry';
 import './ModularNav.css';
 
-const ModularNav = ({ user, onModuleSelect, currentModule }) => {
+const ModularNav = ({ user, onModuleSelect, currentModule, onNavCollapse }) => {
   const { availableModules, loading, error } = useModules(user);
   const [loadingModule, setLoadingModule] = useState(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const toggleCollapse = () => {
+    const newCollapsed = !isCollapsed;
+    setIsCollapsed(newCollapsed);
+    if (onNavCollapse) {
+      onNavCollapse(newCollapsed);
+    }
+  };
 
   const handleModuleClick = async (module) => {
     if (loadingModule) return;
@@ -50,7 +59,12 @@ const ModularNav = ({ user, onModuleSelect, currentModule }) => {
 
   if (loading) {
     return (
-      <nav className="modular-nav">
+      <nav className={`modular-nav ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="nav-toggle">
+          <button className="toggle-btn" onClick={toggleCollapse}>
+            {isCollapsed ? '→' : '←'}
+          </button>
+        </div>
         <div className="nav-loading">Loading modules...</div>
       </nav>
     );
@@ -58,20 +72,35 @@ const ModularNav = ({ user, onModuleSelect, currentModule }) => {
 
   if (error) {
     return (
-      <nav className="modular-nav">
+      <nav className={`modular-nav ${isCollapsed ? 'collapsed' : ''}`}>
+        <div className="nav-toggle">
+          <button className="toggle-btn" onClick={toggleCollapse}>
+            {isCollapsed ? '→' : '←'}
+          </button>
+        </div>
         <div className="nav-error">Error loading modules: {error}</div>
       </nav>
     );
   }
 
   return (
-    <nav className="modular-nav">
+    <nav className={`modular-nav ${isCollapsed ? 'collapsed' : ''}`}>
+      <div className="nav-toggle">
+        <button className="toggle-btn" onClick={toggleCollapse}>
+          {isCollapsed ? '→' : '←'}
+        </button>
+      </div>
+      
       <div className="nav-header">
-        <h2>Sailor Utility</h2>
-        <div className="user-info">
-          <span className="user-name">{user?.first_name || user?.username}</span>
-          {user?.is_admin && <span className="admin-badge">Admin</span>}
-        </div>
+        {!isCollapsed && (
+          <>
+            <h2>Sailor Utility</h2>
+            <div className="user-info">
+              <span className="user-name">{user?.first_name || user?.username}</span>
+              {user?.is_admin && <span className="admin-badge">Admin</span>}
+            </div>
+          </>
+        )}
       </div>
       
       <div className="nav-modules">
@@ -84,8 +113,8 @@ const ModularNav = ({ user, onModuleSelect, currentModule }) => {
             title={module.description}
           >
             <span className="module-icon">{getModuleIcon(module.icon)}</span>
-            <span className="module-name">{module.displayName}</span>
-            {loadingModule === module.name && (
+            {!isCollapsed && <span className="module-name">{module.displayName}</span>}
+            {!isCollapsed && loadingModule === module.name && (
               <span className="loading-indicator">...</span>
             )}
           </button>
@@ -95,7 +124,7 @@ const ModularNav = ({ user, onModuleSelect, currentModule }) => {
       <div className="nav-footer">
         <button className="nav-logout" onClick={() => onModuleSelect('logout')}>
           <span className="module-icon">🚪</span>
-          <span className="module-name">Logout</span>
+          {!isCollapsed && <span className="module-name">Logout</span>}
         </button>
       </div>
     </nav>
