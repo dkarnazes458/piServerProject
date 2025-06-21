@@ -1,0 +1,36 @@
+COMPLETE DATABASE RESTORATION INSTRUCTIONS
+==================================================
+
+This backup includes users, roles, permissions, schema, and data.
+
+RESTORATION STEPS:
+--------------------
+
+1. Stop the application to prevent connections:
+   sudo systemctl stop your-app-service
+
+2. Connect as postgres superuser:
+   sudo -u postgres psql
+
+3. Drop existing database (CAREFUL!):
+   DROP DATABASE IF EXISTS pi_server_db;
+
+4. Exit psql and restore:
+   \q
+   psql -U postgres < complete_backup_20250621_114655.sql
+
+5. Restart application:
+   sudo systemctl start your-app-service
+
+ALTERNATIVE - Restore to new database:
+----------------------------------------
+To restore to a different database name, edit the backup file
+and change 'CREATE DATABASE pi_server_db' to your desired name.
+
+VERIFICATION:
+---------------
+After restoration, verify:
+1. Users exist: \du
+2. Database exists: \l
+3. Tables exist: \dt
+4. Permissions work: SELECT count(*) FROM "user";
