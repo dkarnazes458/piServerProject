@@ -126,20 +126,22 @@ const EquipmentList = ({ onSelect, onEdit, onAdd }) => {
           <h2>Equipment Inventory</h2>
           <span className="item-count">{filteredEquipment.length} items</span>
         </div>
-        <button onClick={onAdd} className="btn-primary">
-          Add Equipment
-        </button>
       </div>
 
       <div className="list-controls">
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search equipment..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+        <div className="controls-row">
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="Search equipment..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <button onClick={onAdd} className="add-equipment-btn">
+            + Add Equipment
+          </button>
         </div>
         
         <div className="filter-controls">

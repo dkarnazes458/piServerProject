@@ -145,8 +145,34 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.controls-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
 .search-box {
   flex: 1;
+}
+
+.add-equipment-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  height: fit-content;
+  line-height: 1.2;
+  max-width: 140px;
+  min-width: 120px;
+}
+
+.add-equipment-btn:hover {
+  background-color: #0056b3;
 }
 
 .search-input {
@@ -708,6 +734,12 @@
     align-items: stretch;
   }
 
+  .controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
   .filter-controls {
     flex-direction: column;
   }
@@ -715,6 +747,11 @@
   .filter-select,
   .sort-select {
     min-width: auto;
+  }
+
+  .add-equipment-btn {
+    align-self: stretch;
+    text-align: center;
   }
 
   .form-actions {
