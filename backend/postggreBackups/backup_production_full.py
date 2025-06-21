@@ -220,7 +220,7 @@ def main():
     print()
     
     # Database URL
-    db_url = "postgresql://admin_user:Trinitron$9d2@192.168.1.165:5432/pi_server_db"
+    db_url = "postgresql://admin_user:Trinitron$9d2@127.0.0.1:5432/pi_server_db"
     
     # Confirm before proceeding
     response = input("Create comprehensive backup? (yes/no): ").strip().lower()
