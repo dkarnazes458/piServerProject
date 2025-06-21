@@ -180,6 +180,93 @@ class ApiService {
       method: 'DELETE'
     });
   }
+
+  // Equipment API
+  async getEquipment() {
+    return await this.request('/equipment');
+  }
+
+  async getEquipmentItem(id) {
+    return await this.request(`/equipment/${id}`);
+  }
+
+  async createEquipment(equipmentData) {
+    return await this.request('/equipment', {
+      method: 'POST',
+      body: JSON.stringify(equipmentData)
+    });
+  }
+
+  async updateEquipment(id, equipmentData) {
+    return await this.request(`/equipment/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(equipmentData)
+    });
+  }
+
+  async deleteEquipment(id) {
+    return await this.request(`/equipment/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // Maintenance API
+  async getMaintenance() {
+    return await this.request('/maintenance');
+  }
+
+  async getMaintenanceRecord(id) {
+    return await this.request(`/maintenance/${id}`);
+  }
+
+  async createMaintenance(maintenanceData) {
+    return await this.request('/maintenance', {
+      method: 'POST',
+      body: JSON.stringify(maintenanceData)
+    });
+  }
+
+  async updateMaintenance(id, maintenanceData) {
+    return await this.request(`/maintenance/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(maintenanceData)
+    });
+  }
+
+  async deleteMaintenance(id) {
+    return await this.request(`/maintenance/${id}`, {
+      method: 'DELETE'
+    });
+  }
+
+  // Events API
+  async getEvents() {
+    return await this.request('/events');
+  }
+
+  async getEvent(id) {
+    return await this.request(`/events/${id}`);
+  }
+
+  async createEvent(eventData) {
+    return await this.request('/events', {
+      method: 'POST',
+      body: JSON.stringify(eventData)
+    });
+  }
+
+  async updateEvent(id, eventData) {
+    return await this.request(`/events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(eventData)
+    });
+  }
+
+  async deleteEvent(id) {
+    return await this.request(`/events/${id}`, {
+      method: 'DELETE'
+    });
+  }
 }
 
 export default new ApiService();

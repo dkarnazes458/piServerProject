@@ -3,31 +3,86 @@
  * 
  * Equipment inventory and tracking
  */
-import React from 'react';
+import React, { useState } from 'react';
+import EquipmentList from './components/EquipmentList';
+import EquipmentForm from './components/EquipmentForm';
+import EquipmentDetail from './components/EquipmentDetail';
 import '../shared.css';
+import './equipment.css';
 
 const EquipmentModule = ({ user }) => {
+  const [currentView, setCurrentView] = useState('list');
+  const [selectedEquipment, setSelectedEquipment] = useState(null);
+
+  const handleSelectEquipment = (equipment) => {
+    setSelectedEquipment(equipment);
+    setCurrentView('detail');
+  };
+
+  const handleEditEquipment = (equipment) => {
+    setSelectedEquipment(equipment);
+    setCurrentView('form');
+  };
+
+  const handleAddEquipment = () => {
+    setSelectedEquipment(null);
+    setCurrentView('form');
+  };
+
+  const handleSaveEquipment = (equipment) => {
+    setSelectedEquipment(equipment);
+    setCurrentView('detail');
+  };
+
+  const handleCancel = () => {
+    setSelectedEquipment(null);
+    setCurrentView('list');
+  };
+
+  const handleBackToList = () => {
+    setSelectedEquipment(null);
+    setCurrentView('list');
+  };
+
+  const handleDeleteEquipment = () => {
+    setSelectedEquipment(null);
+    setCurrentView('list');
+  };
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'form':
+        return (
+          <EquipmentForm
+            equipment={selectedEquipment}
+            onSave={handleSaveEquipment}
+            onCancel={handleCancel}
+          />
+        );
+      case 'detail':
+        return (
+          <EquipmentDetail
+            equipment={selectedEquipment}
+            onEdit={handleEditEquipment}
+            onBack={handleBackToList}
+            onDelete={handleDeleteEquipment}
+          />
+        );
+      case 'list':
+      default:
+        return (
+          <EquipmentList
+            onSelect={handleSelectEquipment}
+            onEdit={handleEditEquipment}
+            onAdd={handleAddEquipment}
+          />
+        );
+    }
+  };
+
   return (
     <div className="module-container">
-      <header className="module-header">
-        <h1>Equipment Tracker</h1>
-        <p>Manage your sailing equipment and inventory</p>
-      </header>
-      
-      <div className="module-content">
-        <div className="placeholder-content">
-          <h3>🚧 Under Development</h3>
-          <p>The equipment module is currently being developed.</p>
-          <p>This will include features for:</p>
-          <ul>
-            <li>Equipment catalog and inventory</li>
-            <li>Condition tracking</li>
-            <li>Warranty management</li>
-            <li>Maintenance scheduling</li>
-            <li>Location tracking</li>
-          </ul>
-        </div>
-      </div>
+      {renderCurrentView()}
     </div>
   );
 };
