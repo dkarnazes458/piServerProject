@@ -109,6 +109,8 @@ Users can enable/disable modules in their profile settings, but only from module
 - id (Primary Key)
 - name (String, required)
 - boat_type (String) - e.g., "Sailboat", "Motorboat", "Catamaran"
+- make (String) - e.g., "Catalina", "Beneteau", "Hunter" [ENHANCED]
+- model (String) - e.g., "320", "Oceanis 40", "326" [ENHANCED]
 - length_feet (Float)
 - beam_feet (Float)
 - draft_feet (Float)
@@ -118,6 +120,8 @@ Users can enable/disable modules in their profile settings, but only from module
 - owner_id (Foreign Key to User)
 - home_port (String)
 - insurance_policy_number (String)
+- picture_path (String, nullable) - Path to boat photo [ENHANCED]
+- picture_filename (String, nullable) - Original filename [ENHANCED]
 - created_at (DateTime)
 - updated_at (DateTime)
 - is_active (Boolean)
@@ -174,6 +178,7 @@ Users can enable/disable modules in their profile settings, but only from module
 - organizer (String)
 - registration_fee (Decimal)
 - max_participants (Integer)
+- organization_id (Foreign Key to Organizations, nullable) [ENHANCED]
 - created_by (Foreign Key to User)
 - created_at (DateTime)
 - updated_at (DateTime)
@@ -232,6 +237,7 @@ Users can enable/disable modules in their profile settings, but only from module
 - trip_id (Foreign Key to Trips)
 - user_id (Foreign Key to User)
 - role (String) - e.g., "Captain", "Crew", "Guest"
+- boat_role_id (Foreign Key to Boat_Roles, nullable) [ENHANCED]
 - joined_at (DateTime)
 ```
 
@@ -254,6 +260,105 @@ Users can enable/disable modules in their profile settings, but only from module
 - permissions (String) - JSON string of permissions
 - added_at (DateTime)
 - is_active (Boolean)
+- boat_role_id (Foreign Key to Boat_Roles, nullable) [ENHANCED]
+```
+
+### Social Module Tables
+
+#### 9. Organizations
+```sql
+- id (Primary Key)
+- name (String, required)
+- description (Text)
+- created_by (Foreign Key to User)
+- is_active (Boolean, default=True)
+- created_at (DateTime)
+- updated_at (DateTime)
+```
+
+#### 10. Organization_Members
+```sql
+- id (Primary Key)
+- organization_id (Foreign Key to Organizations)
+- user_id (Foreign Key to User)
+- role (String) - e.g., "admin", "member"
+- joined_at (DateTime)
+- is_active (Boolean, default=True)
+```
+
+#### 11. Crew_Pool_Invitations
+```sql
+- id (Primary Key)
+- boat_id (Foreign Key to Boats)
+- invited_user_id (Foreign Key to User)
+- invited_by (Foreign Key to User)
+- status (String) - e.g., "pending", "accepted", "declined"
+- invited_at (DateTime)
+- responded_at (DateTime, nullable)
+- message (Text, nullable)
+```
+
+#### 12. Boat_Roles
+```sql
+- id (Primary Key)
+- boat_id (Foreign Key to Boats)
+- role_name (String, required) - e.g., "Helm", "Foredeck", "Pit", "Tactician"
+- description (Text)
+- is_custom (Boolean, default=False) - True for user-defined roles
+- created_by (Foreign Key to User)
+- created_at (DateTime)
+- updated_at (DateTime)
+```
+
+#### 13. Role_Instructions
+```sql
+- id (Primary Key)
+- boat_role_id (Foreign Key to Boat_Roles)
+- title (String, required)
+- content (Text)
+- attachment_path (String, nullable) - Path to uploaded file
+- attachment_type (String, nullable) - e.g., "pdf", "image", "video"
+- created_by (Foreign Key to User)
+- created_at (DateTime)
+- updated_at (DateTime)
+```
+
+#### 14. Equipment_Role_Links
+```sql
+- id (Primary Key)
+- equipment_id (Foreign Key to Equipment)
+- boat_role_id (Foreign Key to Boat_Roles)
+- usage_notes (Text, nullable)
+- is_primary (Boolean, default=False) - Primary equipment for this role
+- created_at (DateTime)
+```
+
+#### 15. Sailing_Experience_Log
+```sql
+- id (Primary Key)
+- user_id (Foreign Key to User)
+- trip_id (Foreign Key to Trips, nullable) - Link to specific trip
+- event_id (Foreign Key to Events, nullable) - Link to specific event
+- role (String) - Role performed during this experience
+- hours (Float) - Hours spent in this role
+- nautical_miles (Float, nullable) - Distance covered
+- experience_type (String) - e.g., "race", "cruise", "training"
+- notes (Text, nullable)
+- created_at (DateTime)
+```
+
+#### 16. User_Availability
+```sql
+- id (Primary Key)
+- user_id (Foreign Key to User)
+- start_date (Date)
+- end_date (Date)
+- availability_type (String) - e.g., "available", "unavailable", "preferred"
+- recurring (Boolean, default=False) - For recurring availability patterns
+- recurring_pattern (String, nullable) - e.g., "weekly", "monthly"
+- notes (Text, nullable)
+- created_at (DateTime)
+- updated_at (DateTime)
 ```
 
 ## Enhanced User Model
@@ -289,7 +394,7 @@ User (Enhanced):
 - Update status regularly to maintain project momentum
 - Review dependencies before starting new phases
 
-### Overall Progress: 19/42 tasks completed (45%)
+### Overall Progress: 19/49 tasks completed (39%)
 
 ## Development Phases
 
@@ -331,9 +436,19 @@ User (Enhanced):
   - [ ] Develop maintenance module with scheduling and tracking
   - [ ] Implement events module with calendar integration
   - [ ] Add navigation module with weather and route planning
-  - [ ] Create social module for crew networking
+  - [ ] Create basic crew networking in social module
 
-### Phase 5: Advanced Features & GPS Integration (Week 11-12) - 0/7 tasks
+### Phase 4.5: Social Module Development (Week 11-12) - 0/7 tasks 📅
+- **Tasks:**
+  - [ ] Create social module database models (Organizations, Crew Pool, Boat Roles, etc.)
+  - [ ] Implement social module backend APIs (25 new endpoints)
+  - [ ] Build organization management frontend components
+  - [ ] Develop crew pool invitation system
+  - [ ] Create boat role and instruction management interface
+  - [ ] Implement sailing resume display and experience logging
+  - [ ] Add social integration to existing modules (boats, trips, events)
+
+### Phase 5: Advanced Features & GPS Integration (Week 13-14) - 0/7 tasks
 - **Tasks:**
   - [ ] Implement GPS file processing (GPX, KML, NMEA formats)
   - [ ] Add interactive map visualization for routes
@@ -343,7 +458,7 @@ User (Enhanced):
   - [ ] Build comprehensive reporting system
   - [ ] Add real-time weather integration
 
-### Phase 6: Testing, Optimization & Admin Tools (Week 13-14) - 0/7 tasks
+### Phase 6: Testing, Optimization & Admin Tools (Week 15-16) - 0/7 tasks
 - **Tasks:**
   - [ ] Comprehensive testing of all modules
   - [ ] Performance optimization for large GPS datasets
@@ -358,6 +473,7 @@ User (Enhanced):
 - **Phase 2**: 6/6 tasks (100%) ✅ - Database Schema & Core Models **COMPLETED**
 - **Phase 3**: 3/7 tasks (43%) ⚠️ - Backend API Development **IN PROGRESS**
 - **Phase 4**: 2/7 tasks (29%) ⚠️ - Frontend Module Development **IN PROGRESS**
+- **Phase 4.5**: 0/7 tasks (0%) 📅 - Social Module Development **PLANNED**
 - **Phase 5**: 0/7 tasks (0%) - Advanced Features & GPS Integration
 - **Phase 6**: 0/7 tasks (0%) - Testing, Optimization & Admin Tools
 
@@ -461,6 +577,53 @@ User (Enhanced):
 - Crew network management and communication
 - Module preferences and customization
 - Profile privacy controls
+
+### Social Module for Crew Networking
+
+**Core Features:**
+- **Organization Management:** Create and manage sailing clubs, racing teams, or informal groups
+- **Crew Pool System:** Invite sailors to join boat-specific crew pools with role-based assignments
+- **Role-Based Instructions:** Attach boat-specific documentation, photos, and instructions to sailing roles
+- **Equipment-Role Integration:** Link specific equipment to roles for automatic instruction delivery
+- **Sailing Resume Auto-Generation:** Automatically build sailor resumes from trip and event participation
+- **Availability Tracking:** Manage sailor availability and crew matching for events
+- **Multi-Role Support:** Users can simultaneously be captains, crew members, and organizers
+- **Privacy Controls:** Granular privacy settings for experience sharing and profile visibility
+
+**Database Architecture:**
+- **8 New Tables:** Organizations, Organization_Members, Crew_Pool_Invitations, Boat_Roles, Role_Instructions, Equipment_Role_Links, Sailing_Experience_Log, User_Availability
+- **Enhanced Tables:** Events (organization_id), Trip_Participants (boat_role_id), Boat_Crew (boat_role_id)
+- **Relationship Integrity:** Full foreign key relationships with proper cascading and constraints
+
+**API Architecture:**
+- **25 New Endpoints:** Complete REST API for all social functionality
+- **Organization Management:** 7 endpoints for CRUD and member management
+- **Crew Pool Operations:** 4 endpoints for invitations and responses
+- **Role System:** 6 endpoints for role and instruction management
+- **Experience Tracking:** 3 endpoints for resume and logging functionality
+- **Availability Management:** 3 endpoints for availability CRUD operations
+- **Enhanced Integrations:** 2 enhanced endpoints for organization-based events
+
+**Frontend Module Structure:**
+```
+src/modules/social/
+├── components/
+│   ├── SocialDashboard.jsx           # Main social hub
+│   ├── organizations/                # Organization management
+│   ├── crew-pool/                    # Crew invitation system
+│   ├── roles/                        # Role & instruction management
+│   └── resume/                       # Sailing resume display
+├── services/                         # API integration
+├── hooks/                            # React hooks for social data
+└── utils/                            # Social utility functions
+```
+
+**Cross-Module Integration:**
+- **Boats Module:** Enhanced with crew pool and role management tabs
+- **Trips Module:** Automatic experience logging and crew selection from pools
+- **Equipment Module:** Role-based equipment assignment and instruction linking
+- **Events Module:** Organization-scoped events and crew recruitment
+- **User Profile:** Integrated sailing resume and availability calendar
 
 ### Admin Panel
 - Module management and configuration

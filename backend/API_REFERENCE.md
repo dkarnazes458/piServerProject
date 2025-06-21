@@ -3,7 +3,7 @@
 ## Current Status
 ✅ **Completed APIs**: Module Management, Authentication, Boats, Trips, Equipment, Maintenance, Events  
 🚧 **In Development**: GPS Processing, Advanced Search, File Upload  
-📅 **Planned**: Navigation, Social, Event Registration  
+📅 **Planned**: Navigation, Social (Crew Network), Event Registration  
 
 ## Authentication
 All endpoints require JWT token in header: `Authorization: Bearer <token>`
@@ -238,6 +238,8 @@ Response: {
       "id": 1,
       "name": "Sea Wanderer",
       "boat_type": "Sailboat",
+      "make": "Catalina",
+      "model": "320",
       "length_feet": 35.0,
       "beam_feet": 12.0,
       "draft_feet": 5.5,
@@ -246,6 +248,8 @@ Response: {
       "registration_number": "NY123456",
       "home_port": "New York Harbor",
       "owner_id": 1,
+      "picture_path": "/uploads/boats/1/sea_wanderer.jpg",
+      "picture_filename": "sea_wanderer.jpg",
       "is_active": true,
       "created_at": "2024-01-01T12:00:00",
       "updated_at": "2024-01-01T12:00:00"
@@ -261,13 +265,16 @@ Create a new boat
 Request: {
   "name": "Sea Wanderer",
   "boat_type": "Sailboat",
+  "make": "Catalina",
+  "model": "320",
   "length_feet": 35.0,
   "beam_feet": 12.0,
   "draft_feet": 5.5,
   "year_built": 2015,
   "hull_material": "Fiberglass",
   "registration_number": "NY123456",
-  "home_port": "New York Harbor"
+  "home_port": "New York Harbor",
+  "picture": "<base64_encoded_image_or_multipart_form_data>"
 }
 
 Response: {
@@ -284,6 +291,20 @@ Update boat (owner only)
 
 #### DELETE `/api/boats/{boat_id}`
 Delete boat (owner only)
+
+#### POST `/api/boats/{boat_id}/photo`
+Upload boat photo (owner only)
+```json
+Request: multipart/form-data with 'photo' field
+Response: {
+  "message": "Photo uploaded successfully",
+  "picture_path": "/uploads/boats/1/boat_photo.jpg",
+  "picture_filename": "boat_photo.jpg"
+}
+```
+
+#### DELETE `/api/boats/{boat_id}/photo`
+Delete boat photo (owner only)
 
 ---
 
@@ -568,3 +589,62 @@ Delete event (creator only)
 2. **Permission Level** - Admin grants module access to users
 3. **User Level** - Users enable/disable their granted modules
 4. **Admin Level** - Some modules require admin privileges
+
+---
+
+## 📅 Planned Social Module APIs
+
+### Organizations
+- `GET /api/organizations` - List user's organizations
+- `POST /api/organizations` - Create organization
+- `GET /api/organizations/{id}` - Get organization details
+- `PUT /api/organizations/{id}` - Update organization (admin only)
+- `DELETE /api/organizations/{id}` - Delete organization (admin only)
+- `GET /api/organizations/{id}/members` - List organization members
+- `POST /api/organizations/{id}/members` - Add member to organization
+- `DELETE /api/organizations/{id}/members/{user_id}` - Remove member
+
+### Crew Pool Management
+- `GET /api/boats/{boat_id}/crew-pool` - Get boat's crew pool
+- `POST /api/boats/{boat_id}/crew-pool/invite` - Invite user to crew pool
+- `PUT /api/crew-invitations/{id}/respond` - Accept/decline invitation
+- `GET /api/user/crew-invitations` - Get user's pending invitations
+
+### Boat Roles & Instructions
+- `GET /api/boats/{boat_id}/roles` - Get boat's defined roles
+- `POST /api/boats/{boat_id}/roles` - Create custom role for boat
+- `PUT /api/boats/{boat_id}/roles/{role_id}` - Update boat role
+- `DELETE /api/boats/{boat_id}/roles/{role_id}` - Delete boat role
+- `GET /api/boats/{boat_id}/roles/{role_id}/instructions` - Get role instructions
+- `POST /api/boats/{boat_id}/roles/{role_id}/instructions` - Add role instruction
+- `PUT /api/role-instructions/{id}` - Update role instruction
+- `DELETE /api/role-instructions/{id}` - Delete role instruction
+- `GET /api/boats/{boat_id}/roles/{role_id}/equipment` - Get role-linked equipment
+- `POST /api/equipment/{equipment_id}/link-role` - Link equipment to role
+
+### Sailing Resume & Experience
+- `GET /api/user/sailing-resume` - Get user's sailing resume
+- `GET /api/users/{id}/sailing-resume` - Get public sailing resume
+- `POST /api/sailing-experience` - Log manual experience entry
+- `GET /api/sailing-experience` - Get user's experience log
+- `PUT /api/sailing-experience/{id}` - Update experience entry
+- `DELETE /api/sailing-experience/{id}` - Delete experience entry
+
+### Availability Management
+- `GET /api/user/availability` - Get user's availability periods
+- `POST /api/user/availability` - Create availability period
+- `PUT /api/user/availability/{id}` - Update availability period
+- `DELETE /api/user/availability/{id}` - Delete availability period
+- `GET /api/boats/{boat_id}/crew-availability` - Check crew availability for boat
+
+### Enhanced Event Management
+- `GET /api/organizations/{id}/events` - Get organization's events
+- `POST /api/organizations/{id}/events` - Create organization event
+
+**Social Module Features:**
+- **Organizations:** Create sailing clubs, racing teams, or informal groups
+- **Crew Pool:** Invite sailors to boat-specific crew pools with role assignments
+- **Role-Based Instructions:** Attach boat-specific documentation and equipment to roles
+- **Sailing Resume:** Auto-generate sailor resumes from trip and event participation
+- **Availability Tracking:** Manage sailor availability for crew matching
+- **Multi-Role Support:** Users can be captains, crew members, and organizers simultaneously
